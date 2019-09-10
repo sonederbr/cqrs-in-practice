@@ -8,4 +8,8 @@
     <Folder Include="AppServices\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.1.0" />
+  </ItemGroup>
+
 </Project>

@@ -1,13 +1,14 @@
-﻿namespace Logic.Students
+﻿using System;
+
+namespace Logic.Students
 {
     public class Course : Entity
     {
-        public Course()
-        {
+        protected Course() { }
 
-        }
         public Course(string name, int credits)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Credits = credits;
         }

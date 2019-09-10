@@ -22,6 +22,7 @@ namespace Logic.Students
         public Student(string name, string email)
             : this()
         {
+            Id = Guid.NewGuid();
             Name = name;
             Email = email;
         }
