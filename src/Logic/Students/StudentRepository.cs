@@ -38,6 +38,10 @@ namespace Logic.Students
 
         public void Save(Student student)
         {
+            var studentFound = _students.FirstOrDefault(p => p.Id == student.Id);
+            if (studentFound != null)
+                _students.Remove(studentFound);
+
             _students.Add(student);
         }
 

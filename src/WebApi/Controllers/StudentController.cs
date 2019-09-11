@@ -9,16 +9,17 @@ namespace WebApi.Controllers
     [Route("api/students")]
     public sealed class StudentController : BaseController
     {
-
-        public StudentController()
+        private readonly IStudentRepository _studentRepository;
+        public StudentController(IStudentRepository studentRepository)
         {
+            _studentRepository = studentRepository;
         }
+
 
         [HttpGet]
         public IActionResult GetList(string enrolled, int? number)
         {
-            var repository = new StudentRepository();
-            return Ok(repository.GetAll());
+            return Ok(_studentRepository.GetAll());
         }
         
         [HttpPost]
@@ -66,7 +67,7 @@ namespace WebApi.Controllers
                 Name = dto.Name,
                 Email = dto.Email
             };
-            var handler = new EditPersonalInfoCommandHandler();
+            var handler = new EditPersonalInfoCommandHandler(_studentRepository);
             Result result = handler.Handle(command);
             return result.IsSuccess ? Ok() : Error(result.Error);
         }

@@ -22,10 +22,15 @@ namespace Logic.Students
 
     public sealed class EditPersonalInfoCommandHandler : ICommandHandler<EditPersonalInfoCommand>
     {
+        private readonly IStudentRepository _studentRepository;
+        public EditPersonalInfoCommandHandler(IStudentRepository studentRepository)
+        {
+            _studentRepository = studentRepository;
+        }
+
         public Result Handle(EditPersonalInfoCommand command)
         {
-            var reposiotry = new StudentRepository();
-            var student = reposiotry.GetById(command.Id);
+            var student = _studentRepository.GetById(command.Id);
 
             if (student == null)
                 return Result.Fail($"No student found for Id {command.Id}");
@@ -33,7 +38,7 @@ namespace Logic.Students
             student.Name = command.Name;
             student.Email = command.Email;
 
-            reposiotry.Save(student);
+            _studentRepository.Save(student);
 
             return Result.Ok();
         }
