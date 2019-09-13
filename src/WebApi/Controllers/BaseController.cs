@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Utils;
 
 namespace WebApi.Controllers
@@ -18,6 +19,10 @@ namespace WebApi.Controllers
         protected IActionResult Error(string errorMessage)
         {
             return BadRequest(Envelope.Error(errorMessage));
+        }
+        protected IActionResult FromResult(Result result)
+        {
+            return result.IsSuccess ? Ok() : Error(result.Error);
         }
     }
 }

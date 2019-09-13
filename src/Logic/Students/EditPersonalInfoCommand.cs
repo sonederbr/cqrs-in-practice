@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CSharpFunctionalExtensions;
+using Logic.Dtos;
 
 namespace Logic.Students
 {
     public interface ICommand
+    {
+
+    }
+
+    public interface IQuery<TResult>
     {
 
     }
@@ -13,11 +21,62 @@ namespace Logic.Students
         Result Handle(TCommand command);
     }
 
+    public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
+    {
+        TResult Handle(TQuery query);
+    }
+
+    public sealed class GetListQuery : IQuery<List<StudentDto>>
+    {
+        public string EnrolledIn { get; }
+        public int? NumberOfCourses { get; }
+
+        public GetListQuery(string enrolledIn, int? numberOfCourses)
+        {
+            EnrolledIn = enrolledIn;
+            NumberOfCourses = numberOfCourses;
+        }
+
+    }
+
+    public sealed class GetListQueryHandler : IQueryHandler<GetListQuery, List<StudentDto>>
+    {
+        private readonly IStudentRepository _studentRepository;
+        public GetListQueryHandler(IStudentRepository studentRepository)
+        {
+            _studentRepository = studentRepository;
+        }
+
+        public List<StudentDto> Handle(GetListQuery query)
+        {
+            IReadOnlyList<Student> students = _studentRepository.GetAll();
+            var dtos = students.Select(p => ConvertToDto(p)).ToList();
+            return dtos;
+        }
+
+        private StudentDto ConvertToDto(Student student)
+        {
+            return new StudentDto
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email
+            };
+        }
+    }
+
     public sealed class EditPersonalInfoCommand : ICommand
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
+        public EditPersonalInfoCommand(Guid id, string name, string email)
+        {
+            Id = id;
+            Name = name;
+            Email = email;
+        }
+
+        public Guid Id { get; }
+        public string Name { get; }
+        public string Email { get; }
     }
 
     public sealed class EditPersonalInfoCommandHandler : ICommandHandler<EditPersonalInfoCommand>

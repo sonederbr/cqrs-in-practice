@@ -1,4 +1,7 @@
-﻿using Logic.Students;
+﻿using System.Collections.Generic;
+using Logic.Dtos;
+using Logic.Students;
+using Logic.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +45,9 @@ namespace WebApi
 
 
             services.AddSingleton<IStudentRepository, StudentRepository>();
+            services.AddTransient<ICommandHandler<EditPersonalInfoCommand>, EditPersonalInfoCommandHandler>();
+            services.AddTransient<IQueryHandler<GetListQuery, List<StudentDto>>, GetListQueryHandler>();
+            services.AddSingleton<Messages>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

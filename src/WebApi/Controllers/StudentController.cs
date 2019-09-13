@@ -1,7 +1,9 @@
 ﻿using System;
-using CSharpFunctionalExtensions;
+
 using Logic.Dtos;
 using Logic.Students;
+using Logic.Utils;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -9,17 +11,18 @@ namespace WebApi.Controllers
     [Route("api/students")]
     public sealed class StudentController : BaseController
     {
-        private readonly IStudentRepository _studentRepository;
-        public StudentController(IStudentRepository studentRepository)
+        private readonly Messages _messages;
+
+        public StudentController(Messages messages)
         {
-            _studentRepository = studentRepository;
+            _messages = messages;
         }
 
 
         [HttpGet]
         public IActionResult GetList(string enrolled, int? number)
         {
-            return Ok(_studentRepository.GetAll());
+            return Ok(_messages.Dispatch(new GetListQuery(enrolled, number)));
         }
         
         [HttpPost]
@@ -61,15 +64,9 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult EditPersonalInfo(Guid id, [FromBody] StudentPersonalInfoDto dto)
         {
-            var command = new EditPersonalInfoCommand()
-            {
-                Id = id,
-                Name = dto.Name,
-                Email = dto.Email
-            };
-            var handler = new EditPersonalInfoCommandHandler(_studentRepository);
-            Result result = handler.Handle(command);
-            return result.IsSuccess ? Ok() : Error(result.Error);
+            var command = new EditPersonalInfoCommand(id, dto.Name, dto.Email);
+            var result = _messages.Dispatch(command);
+            return FromResult(result);
         }
     }
 }
