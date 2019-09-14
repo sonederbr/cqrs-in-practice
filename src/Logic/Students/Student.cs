@@ -15,6 +15,9 @@ namespace Logic.Students
         private readonly IList<Disenrollment> _disenrollments = new List<Disenrollment>();
         public virtual IReadOnlyList<Disenrollment> Disenrollments => _disenrollments.ToList();
 
+        public virtual Enrollment FirstEnrollment => GetEnrollment(0);
+        public virtual Enrollment SecondEnrollment => GetEnrollment(1);
+
         protected Student()
         {
         }

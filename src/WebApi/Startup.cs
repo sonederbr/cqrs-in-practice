@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Logic.AppServices;
 using Logic.Dtos;
 using Logic.Students;
 using Logic.Utils;
@@ -45,8 +46,17 @@ namespace WebApi
 
 
             services.AddSingleton<IStudentRepository, StudentRepository>();
+            services.AddSingleton<ICourseRepository, CourseRepository>();
+
             services.AddTransient<ICommandHandler<EditPersonalInfoCommand>, EditPersonalInfoCommandHandler>();
+            services.AddTransient<ICommandHandler<RegisterCommand>, RegisterCommandHandler>();
+            services.AddTransient<ICommandHandler<UnregisterCommand>, UnregisterCommandHandler>();
+            services.AddTransient<ICommandHandler<TransferCommand>, TransferCommandHandler>();
+            services.AddTransient<ICommandHandler<EnrollCommand>, EnrollCommandHandler>();
+            services.AddTransient<ICommandHandler<DisenrollCommand>, DisenrollCommandHandler>();
+
             services.AddTransient<IQueryHandler<GetListQuery, List<StudentDto>>, GetListQueryHandler>();
+
             services.AddSingleton<Messages>();
         }
 
