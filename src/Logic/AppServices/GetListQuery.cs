@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
+using Logic.Decorators;
 using Logic.Dtos;
 using Logic.Students;
 
@@ -18,6 +19,7 @@ namespace Logic.AppServices
         }
     }
 
+  //  [AuditLog]
     public sealed class GetListQueryHandler : IQueryHandler<GetListQuery, List<StudentDto>>
     {
         private readonly IStudentRepository _studentRepository;

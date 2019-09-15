@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Logic.Students
@@ -38,6 +39,9 @@ namespace Logic.Students
 
         public void Save(Student student)
         {
+            if (student.Name == "string") //To simulate data base broken and see log in decorator.
+                throw new Exception("The connection is broken and recovery is not possible");
+
             var studentFound = _students.FirstOrDefault(p => p.Id == student.Id);
             if (studentFound != null)
                 _students.Remove(studentFound);

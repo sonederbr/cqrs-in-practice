@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Logic.Decorators;
 using Logic.Students;
 using System;
 
@@ -18,6 +19,7 @@ namespace Logic.AppServices
         }
     }
 
+    [AuditLog]
     public sealed class DisenrollCommandHandler : ICommandHandler<DisenrollCommand>
     {
         private readonly IStudentRepository _studentRepository;

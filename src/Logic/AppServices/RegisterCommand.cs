@@ -1,5 +1,6 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
+using Logic.Decorators;
 using Logic.Students;
 
 namespace Logic.AppServices
@@ -24,6 +25,7 @@ namespace Logic.AppServices
         public string Course2Grade { get; }
     }
 
+    [AuditLog]
     public sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand>
     {
         private readonly IStudentRepository _studentRepository;

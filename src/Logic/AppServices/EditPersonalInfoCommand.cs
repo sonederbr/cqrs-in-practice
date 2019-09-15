@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Logic.Decorators;
 using Logic.Students;
 using System;
 
@@ -18,6 +19,8 @@ namespace Logic.AppServices
         public string Email { get; }
     }
 
+    [AuditLog]
+    [DatabaseRetry]
     public sealed class EditPersonalInfoCommandHandler : ICommandHandler<EditPersonalInfoCommand>
     {
         private readonly IStudentRepository _studentRepository;

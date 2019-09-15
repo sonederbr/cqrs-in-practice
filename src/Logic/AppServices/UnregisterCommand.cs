@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Logic.Decorators;
 using Logic.Students;
 using System;
 
@@ -14,6 +15,7 @@ namespace Logic.AppServices
         }
     }
 
+    [AuditLog]
     public sealed class UnregisterCommandHandler : ICommandHandler<UnregisterCommand>
     {
         private readonly IStudentRepository _studentRepository;

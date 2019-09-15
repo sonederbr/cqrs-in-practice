@@ -1,36 +1,40 @@
 ﻿using CSharpFunctionalExtensions;
+using Logic.Decorators;
 using Logic.Students;
 using System;
 
 namespace Logic.AppServices
 {
-    public sealed class EnrollCommand : ICommand
+    public sealed class TransferCommand : ICommand
     {
         public Guid Id { get; }
+        public int EnrollmentNumber { get; }
         public string Course { get; }
         public string Grade { get; }
 
-        public EnrollCommand(Guid id, string course, string grade)
+        public TransferCommand(Guid id, int enrollmentNumber, string course, string grade)
         {
             Id = id;
+            EnrollmentNumber = enrollmentNumber;
             Course = course;
             Grade = grade;
         }
     }
 
-    public sealed class EnrollCommandHandler : ICommandHandler<EnrollCommand>
+    [AuditLog]
+    public sealed class TransferCommandHandler : ICommandHandler<TransferCommand>
     {
         private readonly IStudentRepository _studentRepository;
         private readonly ICourseRepository _courseRepository;
-        public EnrollCommandHandler(IStudentRepository studentRepository
+        public TransferCommandHandler(IStudentRepository studentRepository
             , ICourseRepository courseRepository)
         {
             _studentRepository = studentRepository;
             _courseRepository = courseRepository;
         }
 
-        public Result Handle(EnrollCommand command)
-        {
+        public Result Handle(TransferCommand command)
+        {   
             Student student = _studentRepository.GetById(command.Id);
             if (student == null)
                 return Result.Fail($"No student found with Id '{command.Id}'");
@@ -43,7 +47,11 @@ namespace Logic.AppServices
             if (!success)
                 return Result.Fail($"Grade is incorrect: '{command.Grade}'");
 
-            student.Enroll(course, grade);
+            Enrollment enrollment = student.GetEnrollment(command.EnrollmentNumber);
+            if (enrollment == null)
+                return Result.Fail($"No enrollment found with number '{command.EnrollmentNumber}'");
+
+            enrollment.Update(course, grade);
 
             return Result.Ok();
         }
